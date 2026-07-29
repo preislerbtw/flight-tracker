@@ -1,6 +1,6 @@
+api/
 node_modules
 dist
 .DS_Store
 *.local
 .env
-api
