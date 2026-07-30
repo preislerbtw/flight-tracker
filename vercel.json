@@ -1,6 +1,11 @@
 {
+  "outputDirectory": "dist",
   "rewrites": [
     { "source": "/opensky-token", "destination": "/api/opensky-token" },
-    { "source": "/opensky/:path*", "destination": "/api/opensky/:path*" }
+    { "source": "/opensky/:path*", "destination": "/api/opensky/:path*" },
+    { "source": "/aviationstack/:path*", "destination": "/api/aviationstack/:path*" },
+    { "source": "/aviationweather/:path*", "destination": "/api/aviationweather/:path*" },
+    { "source": "/hexdb/:path*", "destination": "/api/hexdb/:path*" },
+    { "source": "/planespotters/:path*", "destination": "/api/planespotters/:path*" }
   ]
 }
