@@ -1,28 +1,30 @@
-import { defineConfig, loadEnv } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig, loadEnv } from "vite";
+import react from "@vitejs/plugin-react";
 
 const OPENSKY_TOKEN_URL =
-  'https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token';
+  "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
 function openSkyAuthPlugin(clientId, clientSecret) {
   let cachedToken = null;
   let expiresAt = 0; // timestamp em que o token atual expira
 
   async function fetchNewToken() {
     const body = new URLSearchParams({
-      grant_type: 'client_credentials',
+      grant_type: "client_credentials",
       client_id: clientId,
       client_secret: clientSecret,
     });
 
     const res = await fetch(OPENSKY_TOKEN_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body,
     });
 
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`Falha ao obter token OAuth2 da OpenSky (${res.status}): ${text}`);
+      throw new Error(
+        `Falha ao obter token OAuth2 da OpenSky (${res.status}): ${text}`,
+      );
     }
 
     const data = await res.json();
@@ -41,19 +43,22 @@ function openSkyAuthPlugin(clientId, clientSecret) {
   }
 
   return {
-    name: 'opensky-auth-plugin',
+    name: "opensky-auth-plugin",
     configureServer(server) {
-      server.middlewares.use('/opensky-token', async (req, res) => {
+      server.middlewares.use("/opensky-token", async (req, res) => {
         try {
           if (!clientId || !clientSecret) {
             res.statusCode = 500;
-            res.end(JSON.stringify({
-              error: 'OPENSKY_CLIENT_ID / OPENSKY_CLIENT_SECRET não configurados no .env',
-            }));
+            res.end(
+              JSON.stringify({
+                error:
+                  "OPENSKY_CLIENT_ID / OPENSKY_CLIENT_SECRET não configurados no .env",
+              }),
+            );
             return;
           }
           const token = await getValidToken();
-          res.setHeader('Content-Type', 'application/json');
+          res.setHeader("Content-Type", "application/json");
           res.end(JSON.stringify({ access_token: token }));
         } catch (err) {
           res.statusCode = 502;
@@ -65,7 +70,7 @@ function openSkyAuthPlugin(clientId, clientSecret) {
 }
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
+  const env = loadEnv(mode, process.cwd(), "");
 
   return {
     plugins: [
@@ -76,15 +81,25 @@ export default defineConfig(({ mode }) => {
       port: 3000,
       open: true,
       proxy: {
-        '/opensky': {
-          target: 'https://opensky-network.org/api',
+        "/opensky": {
+          target: "https://opensky-network.org/api",
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/opensky/, ''),
+          rewrite: (path) => path.replace(/^\/opensky/, ""),
         },
-        '/aviationstack': {
-          target: 'http://api.aviationstack.com',
+        "/aviationstack": {
+          target: "https://aviationweather.gov/api/data",
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/aviationstack/, ''),
+          rewrite: (path) => path.replace(/^\/aviationstack/, ""),
+        },
+        "/hexdb": {
+          target: "https://hexdb.io/api/v1",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/hexdb/, ""),
+        },
+        "/planespotters": {
+          target: "https://api.planespotters.net/pub",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/planespotters/, ""),
         },
       },
     },

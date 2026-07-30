@@ -1,7 +1,13 @@
+import { useState } from 'react';
 import { Formatters } from '../../../shared/utils/formatters.js';
 import { WeatherWidget } from '../../weather/components/WeatherWidget.jsx';
+import { AirportWeatherPanel } from './AirportWeatherPanel.jsx';
+import { AircraftInfoPanel } from './AircraftInfoPanel.jsx';
 
 export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route, loadingRoute }) {
+  const [showAirportInfo, setShowAirportInfo] = useState(null);
+  const [showAircraftInfo, setShowAircraftInfo] = useState(false);
+
   if (!flight) return null;
 
   const status   = Formatters.getFlightStatus(flight);
@@ -15,13 +21,13 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
     return vr > 0 ? '↑ Subindo' : '↓ Descendo';
   }
 
-  // Dados de rota: real (AviationStack) ou fallback básico
+  // dados de rota do aviao
   const dep = route?.departure;
   const arr = route?.arrival;
   const depInfo = route?.departureInfo;
   const arrInfo = route?.arrivalInfo;
 
-  // Calcula progresso se temos coords de origem e destino
+  // calcula progresso se temos coords de origem e destino
   const depLat = dep?.lat ?? depInfo?.lat;
   const depLon = dep?.lon ?? depInfo?.lon;
   const arrLat = arr?.lat ?? arrInfo?.lat;
@@ -33,7 +39,7 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
     arrLat, arrLon,
   );
 
-  // Atraso em minutos (AviationStack fornece em minutos)
+  // atraso em minutos 
   const depDelay = dep?.delay;
   const arrDelay = arr?.delay;
 
@@ -43,13 +49,15 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
       return new Date(isoStr).toLocaleTimeString('pt-BR', {
         hour: '2-digit', minute: '2-digit',
       });
-    } catch { return null; }
+    } catch (error) {
+      return null;
+    }
   }
 
   return (
     <div className="flight-details">
 
-      {/* ── Cabeçalho ── */}
+      {/* ── cabeçalho ── */}
       <div className="flight-details__header">
         <div className="flight-details__title">
           <span style={{ fontSize: 20 }}>✈️</span>
@@ -58,10 +66,18 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
               {flight.callsign || flight.icao24?.toUpperCase()}
             </div>
             <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 2 }}>
-              {route?.airline
-                ? `${route.airline} · `
-                : `${flight.originCountry} · `}
-              ICAO: {flight.icao24?.toUpperCase()}
+              <>
+                {route?.airline
+                  ? `${route.airline} · `
+                  : `${flight.originCountry} · `}
+                ICAO: {flight.icao24?.toUpperCase()}
+              </>
+              <button
+                className="aircraft-toggle-btn"
+                onClick={() => setShowAircraftInfo((v) => !v)}
+              >
+                ✈ Ver aeronave
+              </button>
             </div>
           </div>
         </div>
@@ -90,7 +106,7 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
         </div>
       </div>
 
-      {/* ── Grid de estatísticas ── */}
+      {/* ── grid de estatísticas ── */}
       <div className="flight-details__grid">
         <div className="details-stat">
           <div className="details-stat__label">Velocidade</div>
@@ -124,10 +140,10 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
         </div>
       </div>
 
-      {/* ── Linha de rota ── */}
+      {/* ── linha de rota ── */}
       <div className="flight-details__route">
 
-        {/* Origem */}
+        {/* origem do voo */}
         <div className="route-airport">
           {loadingRoute ? (
             <div className="route-airport__iata" style={{ fontSize: 14 }}>
@@ -138,6 +154,14 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
               <div className="route-airport__iata">
                 {dep?.iata || depInfo?.iata
                   || (flight.originCountry?.slice(0, 2).toUpperCase() || '??')}
+                {dep?.icao && (
+                  <button
+                    className="airport-toggle-btn"
+                    onClick={() => setShowAirportInfo(showAirportInfo === 'dep' ? null : 'dep')}
+                  >
+                    ℹ
+                  </button>
+                )}
               </div>
               <div className="route-airport__name">
                 {dep?.city || depInfo?.city || flight.originCountry || '—'}
@@ -160,7 +184,7 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
           <div className="route-airport__time" style={{ marginTop: 4 }}>Partida</div>
         </div>
 
-        {/* Barra de progresso central */}
+        {/* barra de progresso central */}
         <div className="route-middle">
           <span className="route-middle__plane">✈</span>
           <div className="route-middle__bar">
@@ -174,7 +198,7 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
           </span>
         </div>
 
-        {/* Destino */}
+        {/* destino */}
         <div className="route-airport" style={{ textAlign: 'right' }}>
           {loadingRoute ? (
             <div className="route-airport__iata" style={{ fontSize: 14, display: 'flex', justifyContent: 'flex-end' }}>
@@ -184,6 +208,14 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
             <>
               <div className="route-airport__iata">
                 {arr?.iata || arrInfo?.iata || heading}
+                {arr?.icao && (
+                  <button
+                    className="airport-toggle-btn"
+                    onClick={() => setShowAirportInfo(showAirportInfo === 'arr' ? null : 'arr')}
+                  >
+                    ℹ
+                  </button>
+                )}
               </div>
               <div className="route-airport__name">
                 {arr?.city || arrInfo?.city || `Rota ${heading}`}
@@ -207,7 +239,20 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
         </div>
       </div>
 
-      {/* ── Clima na posição atual do voo ── */}
+      {/* ── painel meteorológico do aeroporto (METAR/TAF) ── */}
+      {showAirportInfo === 'dep' && dep?.icao && (
+        <AirportWeatherPanel icaoCode={dep.icao} label="Partida" />
+      )}
+      {showAirportInfo === 'arr' && arr?.icao && (
+        <AirportWeatherPanel icaoCode={arr.icao} label="Destino" />
+      )}
+
+      {/* ── painel de informações da aeronave ── */}
+      {showAircraftInfo && (
+        <AircraftInfoPanel icao24={flight.icao24} />
+      )}
+
+      {/* ── clima na posição atual do voo ── */}
       {flight.latitude && flight.longitude && (
         <WeatherWidget
           lat={flight.latitude}
@@ -216,7 +261,7 @@ export function FlightDetails({ flight, onClose, onFavoriteToggle, isFav, route,
         />
       )}
 
-      {/* ── Rodapé: coordenadas, squawk, último contato ── */}
+      {/* ── coordenadas, squawk, ultimo contato ── */}
       <div style={{
         marginTop: 12,
         display: 'flex',
