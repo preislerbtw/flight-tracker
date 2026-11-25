@@ -1,8 +1,10 @@
 /* ===================================================
    components.css — Layout e componentes visuais
+   Tema: Grafite / Cinza Escuro / Emerald
    =================================================== */
 
 /* ── Layout principal ── */
+
 .app-layout {
   display: grid;
   grid-template-rows: 56px 1fr;
@@ -38,6 +40,7 @@
 }
 
 /* ── Header ── */
+
 .header__logo {
   display: flex;
   align-items: center;
@@ -47,6 +50,8 @@
 
 .header__logo-icon {
   font-size: 22px;
+  color: var(--color-accent);
+  filter: drop-shadow(0 0 8px var(--color-accent-glow));
 }
 
 .header__logo-text {
@@ -61,6 +66,8 @@
   color: var(--color-text-muted);
   font-weight: 400;
 }
+
+/* ── Busca no header ── */
 
 .header__search {
   flex: 1;
@@ -79,6 +86,7 @@
 }
 
 /* ── SearchBar ── */
+
 .search-bar {
   position: relative;
   display: flex;
@@ -113,13 +121,17 @@
   font-size: 13px;
   letter-spacing: 1px;
   outline: none;
-  transition: border-color var(--transition);
+  transition: all var(--transition);
 }
 
 .search-bar__input::placeholder {
   font-family: var(--font-display);
   letter-spacing: 0;
   color: var(--color-text-muted);
+}
+
+.search-bar__input:hover {
+  border-color: var(--color-border-2);
 }
 
 .search-bar__input:focus {
@@ -131,24 +143,39 @@
   height: 36px;
   padding: 0 16px;
   background: var(--color-accent);
-  border: none;
+  border: 1px solid var(--color-accent);
   border-radius: var(--radius-sm);
-  color: #090909;
+  color: var(--color-on-accent, #052e24);
   font-family: var(--font-display);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: background var(--transition);
+  transition: all var(--transition);
   white-space: nowrap;
+  box-shadow: 0 0 18px var(--color-accent-glow);
 }
 
-.search-bar__btn:hover { background: #23a87a; }
-.search-bar__btn:disabled { cursor: not-allowed; }
+.search-bar__btn:hover {
+  background: var(--color-accent-dim);
+  border-color: var(--color-accent-dim);
+  box-shadow: 0 0 24px var(--color-accent-glow);
+  transform: translateY(-1px);
+}
+
+.search-bar__btn:active {
+  transform: translateY(0);
+}
+
+.search-bar__btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
 
 /* ── Sidebar ── */
+
 .sidebar__tabs {
   display: flex;
   border-bottom: 1px solid var(--color-border);
@@ -176,14 +203,14 @@
 }
 
 .sidebar__tab:hover {
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   background: var(--color-surface-2);
 }
 
 .sidebar__tab.active {
   color: var(--color-accent);
   border-bottom-color: var(--color-accent);
-  background: var(--color-accent-glow); /* ✅ era rgba fixo quase transparente */
+  background: var(--color-accent-glow);
 }
 
 .sidebar__count {
@@ -225,6 +252,7 @@
 }
 
 /* ── FlightCard ── */
+
 .flight-card {
   background: var(--color-surface-2);
   border: 1px solid var(--color-border);
@@ -238,31 +266,40 @@
 }
 
 .flight-card::before {
-  content: '';
+  content: "";
   position: absolute;
-  left: 0; top: 0; bottom: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
   width: 3px;
   background: var(--color-border-2);
   transition: background var(--transition);
 }
 
 .flight-card:hover {
-  border-color: var(--color-border-2);
-  /* era #131e30 hardcoded — agora usa variável que inverte por tema */
+  border-color: var(--color-accent-dim);
   background: var(--flight-card-hover-bg);
+  box-shadow:
+    0 0 0 1px var(--color-accent-glow),
+    0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .flight-card:hover::before {
-  background: var(--color-accent-dim);
+  background: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-accent);
 }
 
 .flight-card.active {
   border-color: var(--color-accent-dim);
-  background: rgba(113, 115, 116, 0.06);
+  background: var(--color-accent-glow);
+  box-shadow:
+    inset 0 0 30px rgba(16, 185, 129, 0.04),
+    0 0 18px rgba(16, 185, 129, 0.08);
 }
 
 .flight-card.active::before {
   background: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-accent);
 }
 
 .flight-card__header {
@@ -335,6 +372,7 @@
 .flight-card__plane {
   font-size: 14px;
   color: var(--color-accent);
+  filter: drop-shadow(0 0 5px var(--color-accent-glow));
 }
 
 .flight-card__line {
@@ -372,7 +410,8 @@
   color: var(--color-text-secondary);
 }
 
-/* ── FlightDetails (painel de detalhes) ── */
+/* ── FlightDetails ── */
+
 .flight-details {
   position: absolute;
   bottom: 20px;
@@ -384,16 +423,24 @@
   border-radius: var(--radius-lg);
   padding: 20px;
   z-index: 400;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.55),
+    0 0 30px var(--color-accent-glow);
   animation: slide-up 0.25s ease;
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
-/* cabeçalho completo: título à esquerda, controles à direita */
 .flight-details__header {
   display: flex;
   align-items: center;
@@ -403,7 +450,6 @@
   min-width: 0;
 }
 
-/* lado esquerdo: ícone + callsign + subtítulo */
 .flight-details__title {
   display: flex;
   align-items: center;
@@ -412,7 +458,6 @@
   flex: 1;
 }
 
-/* lado direito: badge + favorito + fechar — todos inline, sem sobreposição */
 .flight-details__controls {
   display: flex;
   align-items: center;
@@ -420,7 +465,6 @@
   flex-shrink: 0;
 }
 
-/* botão fechar inline (substituiu o absoluto) */
 .flight-details__close-inline {
   background: var(--color-surface-2);
   border: 1px solid var(--color-border);
@@ -439,10 +483,10 @@
 
 .flight-details__close-inline:hover {
   color: var(--color-text-primary);
-  border-color: var(--color-border-2);
+  border-color: var(--color-accent);
+  background: var(--color-accent-glow);
 }
 
-/* mantido por compatibilidade mas não usado mais no título */
 .flight-details__close {
   display: none;
 }
@@ -453,6 +497,7 @@
   font-weight: 700;
   color: var(--color-accent);
   letter-spacing: 2px;
+  text-shadow: 0 0 15px var(--color-accent-glow);
 }
 
 .flight-details__grid {
@@ -467,6 +512,11 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   padding: 12px;
+  transition: border-color var(--transition);
+}
+
+.details-stat:hover {
+  border-color: var(--color-accent-dim);
 }
 
 .details-stat__label {
@@ -537,7 +587,11 @@
   gap: 4px;
 }
 
-.route-middle__plane { font-size: 20px; color: var(--color-accent); }
+.route-middle__plane {
+  font-size: 20px;
+  color: var(--color-accent);
+  filter: drop-shadow(0 0 6px var(--color-accent-glow));
+}
 
 .route-middle__bar {
   width: 100%;
@@ -550,9 +604,14 @@
 
 .route-middle__progress {
   height: 100%;
-  background: var(--color-accent);
+  background: linear-gradient(
+    90deg,
+    var(--color-accent),
+    var(--color-accent-dim)
+  );
   border-radius: 1px;
   transition: width 1s ease;
+  box-shadow: 0 0 8px var(--color-accent-glow);
 }
 
 .route-middle__pct {
@@ -562,6 +621,7 @@
 }
 
 /* ── WeatherWidget ── */
+
 .weather-widget {
   display: flex;
   align-items: center;
@@ -572,9 +632,14 @@
   border-radius: var(--radius-md);
 }
 
-.weather-widget__icon { font-size: 24px; }
+.weather-widget__icon {
+  font-size: 24px;
+}
 
-.weather-widget__info { flex: 1; min-width: 0; }
+.weather-widget__info {
+  flex: 1;
+  min-width: 0;
+}
 
 .weather-widget__temp {
   font-family: var(--font-mono);
@@ -596,11 +661,11 @@
   font-family: var(--font-mono);
 }
 
-/* ── Overlay de loading no mapa ── */
+/* ── Loading do mapa ── */
+
 .map-loading-overlay {
   position: absolute;
   inset: 0;
-  /* era rgba(8,13,24,0.7) hardcoded — agora usa variável de tema */
   background: var(--map-overlay-bg);
   display: flex;
   align-items: center;
@@ -613,6 +678,7 @@
 }
 
 /* ── Contador de voos ── */
+
 .map-counter {
   position: absolute;
   top: 14px;
@@ -628,15 +694,18 @@
   align-items: center;
   gap: 8px;
   font-family: var(--font-mono);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
 
 .map-counter__num {
   font-size: 16px;
   font-weight: 700;
   color: var(--color-accent);
+  text-shadow: 0 0 10px var(--color-accent-glow);
 }
 
-/* ── Toast de notificação ── */
+/* ── Toast ── */
+
 .toast {
   position: absolute;
   top: 14px;
@@ -652,18 +721,28 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    0 0 20px var(--color-accent-glow);
   animation: toast-in 0.2s ease;
   pointer-events: none;
   white-space: nowrap;
 }
 
 @keyframes toast-in {
-  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
-/* ── Responsivo básico ── */
+/* ── Responsivo ── */
+
 @media (max-width: 768px) {
   .app-layout {
     grid-template-columns: 1fr;
@@ -685,9 +764,13 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .header__search { display: none; }
+  .header__search {
+    display: none;
+  }
 }
+
 /* ── Theme switch ── */
+
 .switch {
   font-size: 12px;
   position: relative;
@@ -709,9 +792,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #030303;
-  border: 1px solid #adb5bd;
-  transition: .4s;
+  background-color: var(--color-surface-2);
+  border: 1px solid var(--color-border-2);
+  transition: 0.4s;
   border-radius: 30px;
 }
 
@@ -723,23 +806,26 @@
   border-radius: 20px;
   left: 0.27em;
   bottom: 0.2em;
-  background-color: #ffffff;
-  transition: .4s;
+  background-color: var(--color-text-primary);
+  transition: 0.4s;
 }
 
 .switch input:checked + .slider {
-  background-color: #f9b600;
-  border: 1px solid #f9b600;
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 12px var(--color-accent-glow);
 }
 
 .switch input:focus + .slider {
-  box-shadow: 0 0 1px #f9b600;
+  box-shadow: 0 0 1px var(--color-accent);
 }
 
 .switch input:checked + .slider:before {
   transform: translateX(1.4em);
-  background-color: #fff;
+  background-color: #ffffff;
 }
+
+/* ── Share button ── */
 
 .share-button-wrapper {
   position: absolute;
@@ -757,15 +843,19 @@
   cursor: pointer;
   font-size: 13px;
   font-family: var(--font-mono);
-  transition: background var(--transition);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  transition: all var(--transition);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
 }
 
 .share-btn:hover {
-  background: var(--color-surface-2);
+  background: var(--color-accent-glow);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  box-shadow: 0 0 18px var(--color-accent-glow);
 }
 
 /* ── Nearby Panel ── */
+
 .nearby-panel {
   position: absolute;
   top: 64px;
@@ -777,7 +867,9 @@
   border-radius: var(--radius-lg);
   padding: 16px;
   z-index: 500;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.55),
+    0 0 25px var(--color-accent-glow);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -817,6 +909,11 @@
   color: var(--color-text-primary);
   padding: 4px 6px;
   font-size: 11px;
+  outline: none;
+}
+
+.nearby-panel__filters select:focus {
+  border-color: var(--color-accent);
 }
 
 .nearby-panel__alert {
@@ -845,12 +942,17 @@
   cursor: pointer;
   font-size: 13px;
   font-family: var(--font-mono);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  transition: all var(--transition);
 }
 
 .nearby-btn:hover {
-  background: var(--color-surface-2);
+  background: var(--color-accent-glow);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
 }
+
+/* ── Airport Weather ── */
 
 .airport-weather {
   margin-top: 10px;
@@ -939,6 +1041,8 @@
   color: var(--color-accent);
 }
 
+/* ── Aircraft Info ── */
+
 .aircraft-info {
   margin-top: 10px;
   padding: 12px;
@@ -967,8 +1071,8 @@
   bottom: 4px;
   right: 6px;
   font-size: 9px;
-  color: #fff;
-  background: rgba(0,0,0,0.5);
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.6);
   padding: 2px 6px;
   border-radius: 4px;
 }
@@ -1025,4 +1129,5 @@
 .aircraft-toggle-btn:hover {
   color: var(--color-accent);
   border-color: var(--color-accent-dim);
+  background: var(--color-accent-glow);
 }

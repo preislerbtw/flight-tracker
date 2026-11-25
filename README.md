@@ -1,4 +1,4 @@
-# FlightTrack ✈
+<!-- # FlightTrack ✈
 
 Rastreador de voos em tempo real com mapa interativo, clima e favoritos.
 
@@ -77,4 +77,4 @@ npm run dev
 Duas inconsistências de nome de arquivo foram corrigidas (funcionavam por acaso em sistemas de arquivo case-insensitive, mas quebrariam em produção na Vercel, que é case-sensitive):
 
 - `src/hooks/useGeoLocation.js` → renomeado para `useGeolocation.js`, batendo com o nome da função exportada (`useGeolocation`) e com o import usado em `NearbyPanel.jsx`.
-- `api/lib/` → renomeado para `api/_lib/`, batendo com os imports (`'./_lib/openskyAuth.js'`) já existentes em `opensky-token.js` e `opensky/[...path].js`.
+- `api/lib/` → renomeado para `api/_lib/`, batendo com os imports (`'./_lib/openskyAuth.js'`) já existentes em `opensky-token.js` e `opensky/[...path].js`. -->
