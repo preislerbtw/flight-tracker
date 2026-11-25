@@ -1,4 +1,4 @@
-import { useAircraftInfo } from '../services/useAircraftInfo.js';
+import { useAircraftInfo } from '../hooks/useAircraftInfo.js';
 
 export function AircraftInfoPanel({ icao24 }) {
   const { info, photo, loading } = useAircraftInfo(icao24);

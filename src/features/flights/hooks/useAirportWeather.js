@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AirportInfoAPI } from './airportInfoAPI.js';
+import { AirportInfoAPI } from '../services/airportInfoAPI.js';
 
 export function useAirportWeather(icaoCode) {
   const [metar, setMetar]     = useState(null);

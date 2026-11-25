@@ -5,8 +5,8 @@ import '../styles/map.css';
 import { Formatters } from '../../../shared/utils/formatters.js';
 
 const TILES = {
-  dark:  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-  light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  dark:  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+  light: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
 };
 
 export function FlightMap({
@@ -98,7 +98,7 @@ export function FlightMap({
     
 
     tileLayerRef.current = L.tileLayer(TILES.light, {
-      attribution: '© <a href="https://carto.com">CARTO</a> | Dados: OpenSky Network',
+      attribution: '© OpenStreetMap contributors | Dados: OpenSky Network',
       subdomains:  'abcd',
       maxZoom:     19,
     }).addTo(mapInstanceRef.current);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { AircraftInfoAPI } from './aircraftInfoAPI.js';
+import { AircraftInfoAPI } from '../services/aircraftInfoAPI.js';
 
 export function useAircraftInfo(icao24) {
   const [info, setInfo]       = useState(null);

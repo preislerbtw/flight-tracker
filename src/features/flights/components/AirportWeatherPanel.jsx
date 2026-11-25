@@ -1,4 +1,4 @@
-import { useAirportWeather } from '../services/useAirportWeather.js';
+import { useAirportWeather } from '../hooks/useAirportWeather.js';
 
 export function AirportWeatherPanel({ icaoCode, label }) {
   const { metar, taf, loading } = useAirportWeather(icaoCode);
